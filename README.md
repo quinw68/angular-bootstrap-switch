@@ -1,4 +1,4 @@
-angular-bootstrap-switch
+angular-bootstrap-switch (with Angular Zone Fix for protractor)
 ========================
 
 [![Bower version][bower-version-image]][bower-url]
