@@ -1,4 +1,4 @@
-angular-bootstrap-switch (with Angular Zone Fix for protractor)
+angular-bootstrap-switch (with Angular Zone Fix for protractor when using ng-upgrade)
 ========================
 
 [![Bower version][bower-version-image]][bower-url]
@@ -7,6 +7,8 @@ angular-bootstrap-switch (with Angular Zone Fix for protractor)
 [![Apache License][license-image]][license-url]
 
 AngularJS directive for the [bootstrap-switch](https://github.com/nostalgiaz/bootstrap-switch) jQuery plugin.
+
+This is forked from the original [angular-bootstrap-switch](https://github.com/frapontillo/angular-bootstrap-switch) repository
 
 ## Usage
 

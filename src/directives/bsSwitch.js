@@ -128,31 +128,24 @@ angular.module('frapontillo.bootstrap-switch')
           if (!isInit) {
             var viewValue = (controller.$modelValue === getTrueValue());
             isInit = !isInit;
-            if (Zone && Zone.current.name === 'angular') {
-                  Zone.current.parent.run(function() {
-                    // Stuff here is run outside the Angular zone and will not be change detected
-                    $timeout(function() {
-                      // Bootstrap the switch plugin
-                      element.bootstrapSwitch({
-                        radioAllOff: getSwitchAttrValue('switchRadioOff'),
-                        disabled: getSwitchAttrValue('switchActive'),
-                        state: viewValue,
-                        onText: getSwitchAttrValue('switchOnText'),
-                        offText: getSwitchAttrValue('switchOffText'),
-                        onColor: getSwitchAttrValue('switchOnColor'),
-                        offColor: getSwitchAttrValue('switchOffColor'),
-                        animate: getSwitchAttrValue('switchAnimate'),
-                        size: getSwitchAttrValue('switchSize'),
-                        labelText: attrs.switchLabel ? getSwitchAttrValue('switchLabel') : getSwitchAttrValue('switchIcon'),
-                        wrapperClass: getSwitchAttrValue('switchWrapper'),
-                        handleWidth: getSwitchAttrValue('switchHandleWidth'),
-                        labelWidth: getSwitchAttrValue('switchLabelWidth'),
-                        inverse: getSwitchAttrValue('switchInverse'),
-                        readonly: getSwitchAttrValue('switchReadonly')
-                      });
-                }, 500);
-              });
-            }
+
+            element.bootstrapSwitch({
+              radioAllOff: getSwitchAttrValue('switchRadioOff'),
+              disabled: getSwitchAttrValue('switchActive'),
+              state: viewValue,
+              onText: getSwitchAttrValue('switchOnText'),
+              offText: getSwitchAttrValue('switchOffText'),
+              onColor: getSwitchAttrValue('switchOnColor'),
+              offColor: getSwitchAttrValue('switchOffColor'),
+              animate: getSwitchAttrValue('switchAnimate'),
+              size: getSwitchAttrValue('switchSize'),
+              labelText: attrs.switchLabel ? getSwitchAttrValue('switchLabel') : getSwitchAttrValue('switchIcon'),
+              wrapperClass: getSwitchAttrValue('switchWrapper'),
+              handleWidth: getSwitchAttrValue('switchHandleWidth'),
+              labelWidth: getSwitchAttrValue('switchLabelWidth'),
+              inverse: getSwitchAttrValue('switchInverse'),
+              readonly: getSwitchAttrValue('switchReadonly')
+            });
 
 
             if (attrs.type === 'radio') {
@@ -190,7 +183,17 @@ angular.module('frapontillo.bootstrap-switch')
 
           // When the model changes
           controller.$render = function () {
-            initMaybe();
+            if (window.Zone && window.Zone.current.name === 'angular') {
+              window.Zone.current.parent.run(function() {
+                // Stuff here is run outside the Angular zone and will not be change detected
+                $timeout(function() {
+                  // Bootstrap the switch plugin
+                  initMaybe();
+                }, 50);
+              });
+            } else {
+              initMaybe();
+            }
 
             // WORKAROUND for https://github.com/Bttstrp/bootstrap-switch/issues/540
             // to update model value when bootstrapSwitch is disabled we should

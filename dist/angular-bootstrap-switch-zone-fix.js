@@ -1,6 +1,6 @@
 /**
- * angular-bootstrap-switch
- * @version v0.5.2 - 2017-04-19
+ * angular-bootstrap-switch-zone-fix
+ * @version v0.5.2 - 2018-03-28
  * @author Francesco Pontillo (francescopontillo@gmail.com)
  * @link https://github.com/frapontillo/angular-bootstrap-switch
  * @license Apache License 2.0(http://www.apache.org/licenses/LICENSE-2.0.html)
@@ -141,7 +141,7 @@ angular.module('frapontillo.bootstrap-switch')
           if (!isInit) {
             var viewValue = (controller.$modelValue === getTrueValue());
             isInit = !isInit;
-            // Bootstrap the switch plugin
+
             element.bootstrapSwitch({
               radioAllOff: getSwitchAttrValue('switchRadioOff'),
               disabled: getSwitchAttrValue('switchActive'),
@@ -159,10 +159,18 @@ angular.module('frapontillo.bootstrap-switch')
               inverse: getSwitchAttrValue('switchInverse'),
               readonly: getSwitchAttrValue('switchReadonly')
             });
+
+
             if (attrs.type === 'radio') {
               controller.$setViewValue(controller.$modelValue);
             } else {
               controller.$setViewValue(viewValue);
+              controller.$formatters[0] = function(value) {
+                if (value === undefined || value === null) {
+                  return value;
+                }
+                return angular.equals(value, getTrueValue());
+              };
             }
           }
         };
@@ -188,7 +196,23 @@ angular.module('frapontillo.bootstrap-switch')
 
           // When the model changes
           controller.$render = function () {
-            initMaybe();
+            if (window.Zone && window.Zone.current.name === 'angular') {
+              window.Zone.current.parent.run(function() {
+                // Stuff here is run outside the Angular zone and will not be change detected
+                $timeout(function() {
+                  // Bootstrap the switch plugin
+                  initMaybe();
+                }, 50);
+              });
+            } else {
+              initMaybe();
+            }
+
+            // WORKAROUND for https://github.com/Bttstrp/bootstrap-switch/issues/540
+            // to update model value when bootstrapSwitch is disabled we should
+            // re-enable it and only then update 'state'
+            element.bootstrapSwitch('disabled', '');
+
             var newValue = controller.$modelValue;
             if (newValue !== undefined && newValue !== null) {
               element.bootstrapSwitch('state', newValue === getTrueValue(), true);
@@ -196,6 +220,10 @@ angular.module('frapontillo.bootstrap-switch')
               element.bootstrapSwitch('indeterminate', true, true);
               controller.$setViewValue(undefined);
             }
+
+            // return initial value for "disabled"
+            setActive();
+
             switchChange();
           };
 
