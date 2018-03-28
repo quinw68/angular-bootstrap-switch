@@ -199,10 +199,7 @@ angular.module('frapontillo.bootstrap-switch')
             if (window.Zone && window.Zone.current.name === 'angular') {
               window.Zone.current.parent.run(function() {
                 // Stuff here is run outside the Angular zone and will not be change detected
-                $timeout(function() {
-                  // Bootstrap the switch plugin
-                  initMaybe();
-                }, 50);
+                initMaybe();
               });
             } else {
               initMaybe();

@@ -1,6 +1,6 @@
 {
   "name": "angular-bootstrap-switch-zone-fix",
-  "version": "0.5.2",
+  "version": "0.5.3",
   "main": "dist/angular-bootstrap-switch-zone-fix.js",
   "author": {
     "name": "Francesco Pontillo",
